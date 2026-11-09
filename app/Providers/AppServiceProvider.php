@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use Dedoc\Scramble\Scramble;
+use Dedoc\Scramble\Support\Generator\OpenApi;
+use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -24,5 +27,11 @@ class AppServiceProvider extends ServiceProvider
                     'message' => 'Demasiados intentos de inicio de sesión. Espera un minuto.',
                 ], 429, $headers));
         });
+
+        // Toda la API pide Bearer en /docs/api, salvo los métodos con @unauthenticated.
+        Scramble::configure()
+            ->withDocumentTransformers(function (OpenApi $openApi) {
+                $openApi->secure(SecurityScheme::http('bearer'));
+            });
     }
 }
