@@ -1,10 +1,15 @@
 <?php
 
+use App\Models\Contact;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -30,6 +35,41 @@ return Application::configure(basePath: dirname(__DIR__))
                     'message' => 'No has iniciado sesión. Inicia sesión para continuar.',
                     'login_url' => route('auth.login'),
                 ], 401);
+            }
+        });
+
+        // 403: el recurso existe pero no es del usuario (mensaje de ContactPolicy).
+        $exceptions->render(function (AccessDeniedHttpException $e, Request $request) {
+            if ($request->is('api/*')) {
+                $mensaje = $e->getMessage() === '' || $e->getMessage() === 'This action is unauthorized.'
+                    ? 'No tienes permiso para realizar esta acción.'
+                    : $e->getMessage();
+
+                return response()->json(['message' => $mensaje], 403);
+            }
+        });
+
+        // 404: la ruta no existe, o el registro no existe (o fue eliminado).
+        $exceptions->render(function (NotFoundHttpException $e, Request $request) {
+            if ($request->is('api/*')) {
+                $anterior = $e->getPrevious();
+
+                $mensaje = match (true) {
+                    $anterior instanceof ModelNotFoundException && $anterior->getModel() === Contact::class => 'El contacto solicitado no existe.',
+                    $anterior instanceof ModelNotFoundException => 'El recurso solicitado no existe.',
+                    default => 'La ruta solicitada no existe.',
+                };
+
+                return response()->json(['message' => $mensaje], 404);
+            }
+        });
+
+        // 405: la ruta existe pero no con ese método (por ejemplo POST /contacts/5).
+        $exceptions->render(function (MethodNotAllowedHttpException $e, Request $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'message' => 'El método '.$request->method().' no está permitido en esta ruta.',
+                ], 405, $e->getHeaders());
             }
         });
     })->create();
