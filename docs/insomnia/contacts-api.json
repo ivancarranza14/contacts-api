@@ -1,0 +1,97 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-11-09T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v11",
+  "resources": [
+    {
+      "_id": "wrk_contacts_api",
+      "_type": "workspace",
+      "parentId": null,
+      "name": "Contacts API",
+      "description": "Colección de la API de contactos (Laravel 13 + Sanctum).",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_contacts_api",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://127.0.0.1:8000/api/v1"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url"
+        ]
+      },
+      "isPrivate": false
+    },
+    {
+      "_id": "env_local",
+      "_type": "environment",
+      "parentId": "env_base",
+      "name": "local",
+      "data": {
+        "base_url": "http://127.0.0.1:8000/api/v1"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url"
+        ]
+      },
+      "color": "#1F7A4D",
+      "isPrivate": false
+    },
+    {
+      "_id": "fld_health",
+      "_type": "request_group",
+      "parentId": "wrk_contacts_api",
+      "name": "Health",
+      "metaSortKey": 1,
+      "environment": {}
+    },
+    {
+      "_id": "req_01",
+      "_type": "request",
+      "parentId": "fld_health",
+      "name": "Health",
+      "description": "Estado del servicio. Público.",
+      "method": "GET",
+      "url": "{{ _.base_url }}/health",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 1,
+      "body": {},
+      "parameters": [],
+      "settingStoreCookies": false,
+      "settingSendCookies": false
+    },
+    {
+      "_id": "req_02",
+      "_type": "request",
+      "parentId": "fld_health",
+      "name": "Ruta inexistente (404 JSON)",
+      "description": "Debe responder 404 en JSON.",
+      "method": "GET",
+      "url": "{{ _.base_url }}/no-existe",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 2,
+      "body": {},
+      "parameters": [],
+      "settingStoreCookies": false,
+      "settingSendCookies": false
+    }
+  ]
+}
