@@ -97,6 +97,8 @@ La colección de Insomnia está en `docs/insomnia/contacts-api.json`.
 | POST   | /api/v1/auth/login    | Inicia sesión y entrega un token     | No     |
 | POST   | /api/v1/auth/logout   | Cierra sesión y revoca el token      | Bearer |
 | GET    | /api/v1/profile       | Perfil del usuario autenticado       | Bearer |
+| PUT    | /api/v1/profile       | Reemplaza el perfil                  | Bearer |
+| PATCH  | /api/v1/profile       | Modifica solo los campos enviados    | Bearer |
 
 ## Autenticación
 

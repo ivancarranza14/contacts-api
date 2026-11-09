@@ -4,6 +4,10 @@ Todos los cambios importantes de este proyecto se registran en este archivo.
 El formato sigue Keep a Changelog y el proyecto usa versionado semántico.
 
 ## [Unreleased]
+### Added
+- Actualizar el perfil con PUT y PATCH (PUT/PATCH /api/v1/profile)
+- Correo y teléfono únicos entre usuarios, también al editar el perfil
+- Correo y teléfono se normalizan antes de validar (mayúsculas, espacios y guiones)
 
 ## [0.3.0] - 2026-11-09
 ### Added
