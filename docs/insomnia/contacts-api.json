@@ -246,6 +246,70 @@
       "parameters": [],
       "settingStoreCookies": false,
       "settingSendCookies": false
+    },
+    {
+      "_id": "req_08",
+      "_type": "request",
+      "parentId": "fld_profile",
+      "name": "Actualizar perfil (PATCH)",
+      "description": "Cambia solo los campos enviados.",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/profile",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer"
+      },
+      "metaSortKey": 8,
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"last_name\": \"Demo Pérez\",\n  \"phone_number\": \"3009998877\"\n}"
+      },
+      "parameters": [],
+      "settingStoreCookies": false,
+      "settingSendCookies": false
+    },
+    {
+      "_id": "req_09",
+      "_type": "request",
+      "parentId": "fld_profile",
+      "name": "Actualizar perfil (PUT)",
+      "description": "Reemplaza todos los datos del perfil.",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/profile",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer"
+      },
+      "metaSortKey": 9,
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"first_name\": \"Usuario\",\n  \"last_name\": \"Demo\",\n  \"email\": \"demo@contacts.test\",\n  \"phone_number\": \"3000000001\"\n}"
+      },
+      "parameters": [],
+      "settingStoreCookies": false,
+      "settingSendCookies": false
     }
   ]
 }
