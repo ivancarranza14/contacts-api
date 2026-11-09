@@ -10,7 +10,7 @@ con un token y administra solo sus propios contactos (listar, crear, ver su perf
 actualizar y eliminar con borrado lógico).
 Proyecto del programa ADSO (SENA), ficha 3174404. Entrega: lunes 23 de noviembre de 2026.
 
-- Versión actual: v0.4.0
+- Versión actual: v1.0.0
 
 ## Contenido
 

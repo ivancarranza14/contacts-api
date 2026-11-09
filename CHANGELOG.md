@@ -4,6 +4,8 @@ Todos los cambios importantes de este proyecto se registran en este archivo.
 El formato sigue Keep a Changelog y el proyecto usa versionado semántico.
 
 ## [Unreleased]
+
+## [1.0.0] - 2026-11-09
 ### Added
 - CRUD de contactos: listar (paginado y con búsqueda), crear, ver perfil, actualizar (PUT y PATCH) y eliminar
 - Borrado lógico de contactos (soft delete)
