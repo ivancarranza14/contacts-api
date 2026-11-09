@@ -5,6 +5,15 @@ El formato sigue Keep a Changelog y el proyecto usa versionado semántico.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-11-09
+### Added
+- CRUD de contactos: listar (paginado y con búsqueda), crear, ver perfil, actualizar (PUT y PATCH) y eliminar
+- Borrado lógico de contactos (soft delete)
+- ContactPolicy: un usuario solo ve, edita o elimina sus propios contactos (403 si es ajeno)
+- Correo y teléfono de contacto únicos, incluidos los contactos eliminados
+- Errores 403, 404 y 405 en JSON y en español
+- Pruebas de cada endpoint de contactos
+
 ## [0.4.0] - 2026-11-09
 ### Added
 - Actualizar el perfil con PUT y PATCH (PUT/PATCH /api/v1/profile)
