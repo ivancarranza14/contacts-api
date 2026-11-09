@@ -4,11 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * La tabla users ya existe desde la sesión 2 (no se edita una migración que ya corrió).
- * Esta migración la deja como pide el documento:
- * first_name, last_name, email, password y phone_number.
- */
+// La tabla users ya existe desde la sesión 2 (no se edita una migración que ya corrió).
+// Esta migración la deja como pide el documento:
+// first_name, last_name, email, password y phone_number.
 return new class extends Migration
 {
     public function up(): void
