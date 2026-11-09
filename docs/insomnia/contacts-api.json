@@ -18,11 +18,13 @@
       "parentId": "wrk_contacts_api",
       "name": "Base Environment",
       "data": {
-        "base_url": "http://127.0.0.1:8000/api/v1"
+        "base_url": "http://127.0.0.1:8000/api/v1",
+        "token": ""
       },
       "dataPropertyOrder": {
         "&": [
-          "base_url"
+          "base_url",
+          "token"
         ]
       },
       "isPrivate": false
@@ -88,6 +90,158 @@
       ],
       "authentication": {},
       "metaSortKey": 2,
+      "body": {},
+      "parameters": [],
+      "settingStoreCookies": false,
+      "settingSendCookies": false
+    },
+    {
+      "_id": "fld_auth",
+      "_type": "request_group",
+      "parentId": "wrk_contacts_api",
+      "name": "Auth",
+      "metaSortKey": 2,
+      "environment": {}
+    },
+    {
+      "_id": "req_03",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Register",
+      "description": "Crea una cuenta y guarda el token en el entorno.",
+      "method": "POST",
+      "url": "{{ _.base_url }}/auth/register",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 3,
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"first_name\": \"Iván\",\n  \"last_name\": \"Carranza\",\n  \"email\": \"ivan@contacts.test\",\n  \"phone_number\": \"3001112233\",\n  \"password\": \"secreta123\",\n  \"password_confirmation\": \"secreta123\",\n  \"device_name\": \"insomnia\"\n}"
+      },
+      "parameters": [],
+      "settingStoreCookies": false,
+      "settingSendCookies": false,
+      "afterResponseScript": "const body = insomnia.response.json();\nif (body.token) {\n    insomnia.environment.set('token', body.token);\n}\n"
+    },
+    {
+      "_id": "req_04",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Login",
+      "description": "Inicia sesión con el usuario del seeder y guarda el token en el entorno.",
+      "method": "POST",
+      "url": "{{ _.base_url }}/auth/login",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 4,
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"demo@contacts.test\",\n  \"password\": \"password\",\n  \"device_name\": \"insomnia\"\n}"
+      },
+      "parameters": [],
+      "settingStoreCookies": false,
+      "settingSendCookies": false,
+      "afterResponseScript": "const body = insomnia.response.json();\nif (body.token) {\n    insomnia.environment.set('token', body.token);\n}\n"
+    },
+    {
+      "_id": "req_05",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Login incorrecto (422)",
+      "description": "Contraseña incorrecta: 422. Al sexto intento en un minuto: 429.",
+      "method": "POST",
+      "url": "{{ _.base_url }}/auth/login",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": 5,
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"demo@contacts.test\",\n  \"password\": \"otra\",\n  \"device_name\": \"insomnia\"\n}"
+      },
+      "parameters": [],
+      "settingStoreCookies": false,
+      "settingSendCookies": false
+    },
+    {
+      "_id": "req_06",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Logout",
+      "description": "Revoca el token actual: 204.",
+      "method": "POST",
+      "url": "{{ _.base_url }}/auth/logout",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer"
+      },
+      "metaSortKey": 6,
+      "body": {},
+      "parameters": [],
+      "settingStoreCookies": false,
+      "settingSendCookies": false
+    },
+    {
+      "_id": "fld_profile",
+      "_type": "request_group",
+      "parentId": "wrk_contacts_api",
+      "name": "Perfil de usuario",
+      "metaSortKey": 3,
+      "environment": {}
+    },
+    {
+      "_id": "req_07",
+      "_type": "request",
+      "parentId": "fld_profile",
+      "name": "Ver perfil",
+      "description": "Perfil del usuario autenticado. Sin token: 401 con el enlace al login.",
+      "method": "GET",
+      "url": "{{ _.base_url }}/profile",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer"
+      },
+      "metaSortKey": 7,
       "body": {},
       "parameters": [],
       "settingStoreCookies": false,
