@@ -51,6 +51,19 @@ php artisan migrate
 php artisan serve
 ```
 
+## Modelo de datos
+
+Diagrama entidad-relación: [docs/er.md](docs/er.md)
+
+## Datos de prueba
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+Crea el usuario demo (demo@contacts.test / password) con 10 contactos y
+2 usuarios más con 5 contactos cada uno. Solo para desarrollo local.
+
 ## Variables de entorno
 
 | Variable    | Ejemplo         | Descripción                    |
