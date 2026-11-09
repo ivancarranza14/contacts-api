@@ -19,12 +19,14 @@
       "name": "Base Environment",
       "data": {
         "base_url": "http://127.0.0.1:8000/api/v1",
-        "token": ""
+        "token": "",
+        "contact_id": "1"
       },
       "dataPropertyOrder": {
         "&": [
           "base_url",
-          "token"
+          "token",
+          "contact_id"
         ]
       },
       "isPrivate": false
@@ -307,6 +309,236 @@
         "mimeType": "application/json",
         "text": "{\n  \"first_name\": \"Usuario\",\n  \"last_name\": \"Demo\",\n  \"email\": \"demo@contacts.test\",\n  \"phone_number\": \"3000000001\"\n}"
       },
+      "parameters": [],
+      "settingStoreCookies": false,
+      "settingSendCookies": false
+    },
+    {
+      "_id": "fld_contacts",
+      "_type": "request_group",
+      "parentId": "wrk_contacts_api",
+      "name": "Contactos",
+      "metaSortKey": 4,
+      "environment": {}
+    },
+    {
+      "_id": "req_10",
+      "_type": "request",
+      "parentId": "fld_contacts",
+      "name": "Listar contactos",
+      "description": "Solo los contactos propios, paginados. Admite ?search= y ?per_page=.",
+      "method": "GET",
+      "url": "{{ _.base_url }}/contacts?per_page=15",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer"
+      },
+      "metaSortKey": 10,
+      "body": {},
+      "parameters": [],
+      "settingStoreCookies": false,
+      "settingSendCookies": false
+    },
+    {
+      "_id": "req_11",
+      "_type": "request",
+      "parentId": "fld_contacts",
+      "name": "Buscar contactos",
+      "description": "Busca por nombre, apellido, correo o teléfono.",
+      "method": "GET",
+      "url": "{{ _.base_url }}/contacts?search=ana",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer"
+      },
+      "metaSortKey": 11,
+      "body": {},
+      "parameters": [],
+      "settingStoreCookies": false,
+      "settingSendCookies": false
+    },
+    {
+      "_id": "req_12",
+      "_type": "request",
+      "parentId": "fld_contacts",
+      "name": "Crear contacto",
+      "description": "201 y guarda contact_id en el entorno. Correo o teléfono repetido: 422.",
+      "method": "POST",
+      "url": "{{ _.base_url }}/contacts",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer"
+      },
+      "metaSortKey": 12,
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"first_name\": \"Ana\",\n  \"last_name\": \"Pérez\",\n  \"phone_number\": \"3101234567\",\n  \"email\": \"ana.perez@correo.com\",\n  \"address\": \"Calle 10 # 5-20, Bogotá\",\n  \"avatar_url\": \"https://i.pravatar.cc/300?img=5\"\n}"
+      },
+      "parameters": [],
+      "settingStoreCookies": false,
+      "settingSendCookies": false,
+      "afterResponseScript": "const body = insomnia.response.json();\nif (body.data && body.data.id) {\n    insomnia.environment.set('contact_id', String(body.data.id));\n}\n"
+    },
+    {
+      "_id": "req_13",
+      "_type": "request",
+      "parentId": "fld_contacts",
+      "name": "Perfil del contacto",
+      "description": "200 si es tuyo, 403 si es de otro usuario, 404 si no existe o fue eliminado.",
+      "method": "GET",
+      "url": "{{ _.base_url }}/contacts/{{ _.contact_id }}",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer"
+      },
+      "metaSortKey": 13,
+      "body": {},
+      "parameters": [],
+      "settingStoreCookies": false,
+      "settingSendCookies": false
+    },
+    {
+      "_id": "req_14",
+      "_type": "request",
+      "parentId": "fld_contacts",
+      "name": "Actualizar contacto (PATCH)",
+      "description": "Cambia solo los campos enviados.",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/contacts/{{ _.contact_id }}",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer"
+      },
+      "metaSortKey": 14,
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"address\": \"Carrera 7 # 12-34, Bogotá\"\n}"
+      },
+      "parameters": [],
+      "settingStoreCookies": false,
+      "settingSendCookies": false
+    },
+    {
+      "_id": "req_15",
+      "_type": "request",
+      "parentId": "fld_contacts",
+      "name": "Actualizar contacto (PUT)",
+      "description": "PUT exige todos los campos obligatorios.",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/contacts/{{ _.contact_id }}",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer"
+      },
+      "metaSortKey": 15,
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"first_name\": \"Ana María\",\n  \"last_name\": \"Pérez\",\n  \"phone_number\": \"3101234567\",\n  \"email\": \"ana.perez@correo.com\",\n  \"address\": \"Carrera 7 # 12-34, Bogotá\",\n  \"avatar_url\": null\n}"
+      },
+      "parameters": [],
+      "settingStoreCookies": false,
+      "settingSendCookies": false
+    },
+    {
+      "_id": "req_16",
+      "_type": "request",
+      "parentId": "fld_contacts",
+      "name": "Eliminar contacto",
+      "description": "Borrado lógico (soft delete): 204.",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/contacts/{{ _.contact_id }}",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer"
+      },
+      "metaSortKey": 16,
+      "body": {},
+      "parameters": [],
+      "settingStoreCookies": false,
+      "settingSendCookies": false
+    },
+    {
+      "_id": "req_17",
+      "_type": "request",
+      "parentId": "fld_contacts",
+      "name": "Contacto de otro usuario (403)",
+      "description": "Con el usuario demo, el contacto 11 es de otro usuario del seeder: 403.",
+      "method": "GET",
+      "url": "{{ _.base_url }}/contacts/11",
+      "headers": [
+        {
+          "name": "Accept",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer"
+      },
+      "metaSortKey": 17,
+      "body": {},
       "parameters": [],
       "settingStoreCookies": false,
       "settingSendCookies": false
