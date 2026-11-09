@@ -9,7 +9,7 @@ API REST para gestionar una agenda de contactos personal: cada usuario inicia se
 con un token y administra solo sus propios contactos.
 Proyecto del programa ADSO (SENA), ficha 3174404.
 
-- Versión actual: v0.1.0
+- Versión actual: v0.2.0
 
 ## Contenido
 
