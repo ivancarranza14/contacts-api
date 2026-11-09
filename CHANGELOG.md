@@ -5,6 +5,18 @@ El formato sigue Keep a Changelog y el proyecto usa versionado semántico.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-09
+### Added
+- Registro de usuarios con token (POST /api/v1/auth/register)
+- Login con token de Sanctum (POST /api/v1/auth/login)
+- Cierre de sesión que revoca el token (POST /api/v1/auth/logout)
+- Perfil del usuario autenticado (GET /api/v1/profile)
+- 401 en JSON con el enlace al login cuando no hay sesión
+- Límite de 5 intentos de login por minuto
+- Esquema Bearer en la documentación
+### Changed
+- El endpoint de salud pasa a un controlador invocable
+
 ## [0.2.0] - 2026-11-09
 ### Added
 - Campos first_name, last_name y phone_number (único) en usuarios

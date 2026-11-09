@@ -9,7 +9,7 @@ API REST para gestionar una agenda de contactos personal: cada usuario inicia se
 con un token y administra solo sus propios contactos.
 Proyecto del programa ADSO (SENA), ficha 3174404.
 
-- Versión actual: v0.2.0
+- Versión actual: v0.3.0
 
 ## Contenido
 
@@ -90,9 +90,28 @@ La colección de Insomnia está en `docs/insomnia/contacts-api.json`.
 
 ## Endpoints
 
-| Método | Ruta           | Descripción         | Auth |
-|--------|----------------|---------------------|------|
-| GET    | /api/v1/health | Estado del servicio | No   |
+| Método | Ruta                  | Descripción                          | Auth   |
+|--------|-----------------------|--------------------------------------|--------|
+| GET    | /api/v1/health        | Estado del servicio                  | No     |
+| POST   | /api/v1/auth/register | Crea una cuenta y entrega un token   | No     |
+| POST   | /api/v1/auth/login    | Inicia sesión y entrega un token     | No     |
+| POST   | /api/v1/auth/logout   | Cierra sesión y revoca el token      | Bearer |
+| GET    | /api/v1/profile       | Perfil del usuario autenticado       | Bearer |
+
+## Autenticación
+
+1. POST /api/v1/auth/login (o /auth/register) con email, password y device_name.
+2. Guardar el token de la respuesta.
+3. Enviar en cada petición protegida:
+   `Authorization: Bearer {token}` y `Accept: application/json`.
+
+Sin token (o con un token revocado) la API responde 401 con el enlace al login:
+
+```json
+{"message": "No has iniciado sesión. Inicia sesión para continuar.", "login_url": "http://127.0.0.1:8000/api/v1/auth/login"}
+```
+
+El login admite 5 intentos por minuto por correo e IP (al sexto: 429).
 
 ## Flujo de trabajo
 
