@@ -4,6 +4,13 @@ Todos los cambios importantes de este proyecto se registran en este archivo.
 El formato sigue Keep a Changelog y el proyecto usa versionado semántico.
 
 ## [Unreleased]
+### Changed
+- Login y logout pasan a POST /api/v1/login y POST /api/v1/logout, como pide el plan de mejoramiento
+- Credenciales incorrectas responden 401 «Credenciales incorrectas» (antes 422); device_name es opcional
+- Logout y eliminar contacto responden 200 con mensaje (antes 204 sin contenido)
+- Mensajes de contactos: «creado / actualizado / eliminado exitosamente»
+### Added
+- Usuario luistoncel@test.com con 10 contactos en el seeder (matriz de pruebas CP-01)
 
 ## [1.0.0] - 2026-11-09
 ### Added

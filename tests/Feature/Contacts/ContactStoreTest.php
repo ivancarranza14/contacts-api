@@ -23,7 +23,7 @@ it('crea un contacto para el usuario autenticado', function () {
 
     $this->postJson('/api/v1/contacts', datosContacto())
         ->assertCreated()
-        ->assertJsonPath('message', 'Contacto creado correctamente.')
+        ->assertJsonPath('message', 'Contacto creado exitosamente')
         ->assertJsonPath('data.full_name', 'Ana Pérez')
         ->assertJsonPath('data.phone_number', '3101234567')
         ->assertJsonPath('data.email', 'ana.perez@correo.com')

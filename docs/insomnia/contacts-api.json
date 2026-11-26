@@ -141,7 +141,7 @@
       "name": "Login",
       "description": "Inicia sesión con el usuario del seeder y guarda el token en el entorno.",
       "method": "POST",
-      "url": "{{ _.base_url }}/auth/login",
+      "url": "{{ _.base_url }}/login",
       "headers": [
         {
           "name": "Accept",
@@ -167,10 +167,10 @@
       "_id": "req_05",
       "_type": "request",
       "parentId": "fld_auth",
-      "name": "Login incorrecto (422)",
-      "description": "Contraseña incorrecta: 422. Al sexto intento en un minuto: 429.",
+      "name": "Login incorrecto (401)",
+      "description": "Contraseña incorrecta: 401 «Credenciales incorrectas». Al sexto intento en un minuto: 429.",
       "method": "POST",
-      "url": "{{ _.base_url }}/auth/login",
+      "url": "{{ _.base_url }}/login",
       "headers": [
         {
           "name": "Accept",
@@ -196,9 +196,9 @@
       "_type": "request",
       "parentId": "fld_auth",
       "name": "Logout",
-      "description": "Revoca el token actual: 204.",
+      "description": "Revoca el token actual: 200 «Sesión cerrada exitosamente».",
       "method": "POST",
-      "url": "{{ _.base_url }}/auth/logout",
+      "url": "{{ _.base_url }}/logout",
       "headers": [
         {
           "name": "Accept",
@@ -498,7 +498,7 @@
       "_type": "request",
       "parentId": "fld_contacts",
       "name": "Eliminar contacto",
-      "description": "Borrado lógico (soft delete): 204.",
+      "description": "Borrado lógico (soft delete): 200 «Contacto eliminado exitosamente».",
       "method": "DELETE",
       "url": "{{ _.base_url }}/contacts/{{ _.contact_id }}",
       "headers": [

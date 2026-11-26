@@ -17,7 +17,7 @@ it('pide token para listar contactos y devuelve al login', function () {
     $this->getJson('/api/v1/contacts')
         ->assertUnauthorized()
         ->assertJsonMissingPath('data')
-        ->assertJsonPath('login_url', fn (string $url) => str_ends_with($url, '/api/v1/auth/login'));
+        ->assertJsonPath('login_url', fn (string $url) => str_ends_with($url, '/api/v1/login'));
 });
 
 it('lista solo los contactos del usuario autenticado', function () {

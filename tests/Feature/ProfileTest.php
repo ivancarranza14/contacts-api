@@ -17,7 +17,7 @@ beforeEach(function () {
 it('pide token para ver el perfil y devuelve al login', function () {
     $this->getJson('/api/v1/profile')
         ->assertUnauthorized()
-        ->assertJsonPath('login_url', fn (string $url) => str_ends_with($url, '/api/v1/auth/login'));
+        ->assertJsonPath('login_url', fn (string $url) => str_ends_with($url, '/api/v1/login'));
 });
 
 it('responde 401 en JSON aunque falte la cabecera Accept', function () {

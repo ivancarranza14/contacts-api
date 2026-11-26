@@ -10,6 +10,17 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // Usuario del plan de mejoramiento (matriz de pruebas CP-01).
+        $luis = User::factory()->create([
+            'first_name' => 'Luis',
+            'last_name' => 'Toncel',
+            'email' => 'luistoncel@test.com',
+            'password' => '12345678***',
+            'phone_number' => '3000000002',
+        ]);
+
+        Contact::factory(10)->for($luis)->create();
+
         // Usuario conocido para iniciar sesión en Insomnia: demo@contacts.test / password
         $demo = User::factory()->create([
             'first_name' => 'Usuario',

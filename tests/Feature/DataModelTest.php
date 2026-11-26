@@ -68,13 +68,17 @@ it('elimina contactos con borrado lógico', function () {
         ->and(Contact::withTrashed()->count())->toBe(1);
 });
 
-it('siembra el usuario demo y los contactos de ejemplo', function () {
+it('siembra el usuario del plan, el usuario demo y los contactos de ejemplo', function () {
     $this->seed(DatabaseSeeder::class);
 
+    $luis = User::firstWhere('email', 'luistoncel@test.com');
     $demo = User::firstWhere('email', 'demo@contacts.test');
 
-    expect($demo)->not->toBeNull()
+    expect($luis)->not->toBeNull()
+        ->and(Hash::check('12345678***', $luis->password))->toBeTrue()
+        ->and($luis->contacts()->count())->toBe(10)
+        ->and($demo)->not->toBeNull()
         ->and($demo->contacts()->count())->toBe(10)
-        ->and(User::count())->toBe(3)
-        ->and(Contact::count())->toBe(20);
+        ->and(User::count())->toBe(4)
+        ->and(Contact::count())->toBe(30);
 });

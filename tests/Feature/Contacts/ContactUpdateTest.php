@@ -24,7 +24,7 @@ it('actualiza solo los campos enviados con PATCH', function () {
 
     $this->patchJson("/api/v1/contacts/{$this->contact->id}", ['address' => 'Carrera 7 # 12-34, Bogotá'])
         ->assertOk()
-        ->assertJsonPath('message', 'Contacto actualizado correctamente.')
+        ->assertJsonPath('message', 'Contacto actualizado exitosamente')
         ->assertJsonPath('data.address', 'Carrera 7 # 12-34, Bogotá')
         ->assertJsonPath('data.email', 'ana.perez@correo.com');
 

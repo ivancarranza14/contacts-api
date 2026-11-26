@@ -83,10 +83,10 @@ it('exige que la confirmación de la contraseña coincida', function () {
         ->assertJsonValidationErrors(['password']);
 });
 
-// ---------- POST /api/v1/auth/login ----------
+// ---------- POST /api/v1/login ----------
 
 it('entrega un token con credenciales correctas', function () {
-    $this->postJson('/api/v1/auth/login', datosLogin())
+    $this->postJson('/api/v1/login', datosLogin())
         ->assertOk()
         ->assertJsonStructure(['token', 'token_type', 'user' => ['id', 'first_name', 'email']])
         ->assertJsonPath('token_type', 'Bearer')
@@ -96,45 +96,55 @@ it('entrega un token con credenciales correctas', function () {
     expect($this->user->tokens()->count())->toBe(1);
 });
 
-it('rechaza una contraseña incorrecta con 422', function () {
-    $this->postJson('/api/v1/auth/login', datosLogin(['password' => 'otra']))
-        ->assertUnprocessable()
-        ->assertJsonValidationErrors(['email']);
+it('entrega un token aunque la app no envíe device_name', function () {
+    $this->postJson('/api/v1/login', datosLogin(['device_name' => null]))
+        ->assertOk()
+        ->assertJsonStructure(['token', 'user']);
+
+    expect($this->user->tokens()->first()->name)->toBe('app');
+});
+
+it('rechaza una contraseña incorrecta con 401', function () {
+    $this->postJson('/api/v1/login', datosLogin(['password' => 'otra']))
+        ->assertUnauthorized()
+        ->assertJsonPath('message', 'Credenciales incorrectas')
+        ->assertJsonMissingPath('token');
 
     expect($this->user->tokens()->count())->toBe(0);
 });
 
 it('usa el mismo mensaje si el correo no existe', function () {
-    $this->postJson('/api/v1/auth/login', datosLogin(['email' => 'nadie@contacts.test']))
-        ->assertUnprocessable()
-        ->assertJsonPath('errors.email.0', 'Las credenciales no son correctas.');
+    $this->postJson('/api/v1/login', datosLogin(['email' => 'nadie@contacts.test']))
+        ->assertUnauthorized()
+        ->assertJsonPath('message', 'Credenciales incorrectas');
 });
 
 it('valida los campos obligatorios del login', function (string $campo) {
-    $this->postJson('/api/v1/auth/login', datosLogin([$campo => '']))
+    $this->postJson('/api/v1/login', datosLogin([$campo => '']))
         ->assertUnprocessable()
         ->assertJsonValidationErrors([$campo]);
-})->with(['email', 'password', 'device_name']);
+})->with(['email', 'password']);
 
 it('limita los intentos de login a 5 por minuto', function () {
     foreach (range(1, 5) as $intento) {
-        $this->postJson('/api/v1/auth/login', datosLogin(['password' => 'otra']))
-            ->assertUnprocessable();
+        $this->postJson('/api/v1/login', datosLogin(['password' => 'otra']))
+            ->assertUnauthorized();
     }
 
-    $this->postJson('/api/v1/auth/login', datosLogin(['password' => 'otra']))
+    $this->postJson('/api/v1/login', datosLogin(['password' => 'otra']))
         ->assertTooManyRequests()
         ->assertJsonPath('message', 'Demasiados intentos de inicio de sesión. Espera un minuto.');
 });
 
-// ---------- POST /api/v1/auth/logout ----------
+// ---------- POST /api/v1/logout ----------
 
 it('cierra sesión y revoca el token', function () {
     $token = $this->user->createToken('pruebas')->plainTextToken;
 
     $this->withToken($token)
-        ->postJson('/api/v1/auth/logout')
-        ->assertNoContent();
+        ->postJson('/api/v1/logout')
+        ->assertOk()
+        ->assertJsonPath('message', 'Sesión cerrada exitosamente');
 
     expect($this->user->tokens()->count())->toBe(0);
 });
@@ -142,7 +152,7 @@ it('cierra sesión y revoca el token', function () {
 it('no deja usar el token después de cerrar sesión', function () {
     $token = $this->user->createToken('pruebas')->plainTextToken;
 
-    $this->withToken($token)->postJson('/api/v1/auth/logout')->assertNoContent();
+    $this->withToken($token)->postJson('/api/v1/logout')->assertOk();
 
     // En las pruebas la app no se reinicia entre peticiones: se olvida el usuario ya resuelto.
     $this->app['auth']->forgetGuards();
@@ -153,8 +163,8 @@ it('no deja usar el token después de cerrar sesión', function () {
 });
 
 it('pide token para cerrar sesión y devuelve al login', function () {
-    $this->postJson('/api/v1/auth/logout')
+    $this->postJson('/api/v1/logout')
         ->assertUnauthorized()
         ->assertJsonPath('message', 'No has iniciado sesión. Inicia sesión para continuar.')
-        ->assertJsonPath('login_url', fn (string $url) => str_ends_with($url, '/api/v1/auth/login'));
+        ->assertJsonPath('login_url', fn (string $url) => str_ends_with($url, '/api/v1/login'));
 });

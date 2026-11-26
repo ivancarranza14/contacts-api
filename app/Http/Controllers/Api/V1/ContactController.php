@@ -9,7 +9,6 @@ use App\Models\Contact;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
@@ -64,7 +63,7 @@ class ContactController extends Controller implements HasMiddleware
         $contact = $request->user()->contacts()->create($request->validated());
 
         return (new ContactResource($contact))
-            ->additional(['message' => 'Contacto creado correctamente.'])
+            ->additional(['message' => 'Contacto creado exitosamente'])
             ->response()
             ->setStatusCode(201);
     }
@@ -85,17 +84,17 @@ class ContactController extends Controller implements HasMiddleware
         $contact->update($request->validated());
 
         return (new ContactResource($contact))->additional([
-            'message' => 'Contacto actualizado correctamente.',
+            'message' => 'Contacto actualizado exitosamente',
         ]);
     }
 
     /**
      * Elimina un contacto con borrado lógico (soft delete).
      */
-    public function destroy(Contact $contact): Response
+    public function destroy(Contact $contact): JsonResponse
     {
         $contact->delete();
 
-        return response()->noContent();
+        return response()->json(['message' => 'Contacto eliminado exitosamente']);
     }
 }

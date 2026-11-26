@@ -25,7 +25,8 @@ it('elimina un contacto propio con borrado lógico', function () {
     Sanctum::actingAs($this->user);
 
     $this->deleteJson("/api/v1/contacts/{$contact->id}")
-        ->assertNoContent();
+        ->assertOk()
+        ->assertJsonPath('message', 'Contacto eliminado exitosamente');
 
     $this->assertSoftDeleted($contact);
     expect(Contact::withTrashed()->find($contact->id))->not->toBeNull();
@@ -46,7 +47,7 @@ it('responde 404 al eliminar un contacto que ya fue eliminado', function () {
     $contact = Contact::factory()->for($this->user)->create();
     Sanctum::actingAs($this->user);
 
-    $this->deleteJson("/api/v1/contacts/{$contact->id}")->assertNoContent();
+    $this->deleteJson("/api/v1/contacts/{$contact->id}")->assertOk();
 
     $this->deleteJson("/api/v1/contacts/{$contact->id}")
         ->assertNotFound()

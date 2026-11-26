@@ -74,7 +74,8 @@ Diagrama entidad-relación: [docs/er.md](docs/er.md)
 php artisan migrate:fresh --seed
 ```
 
-Crea el usuario demo (demo@contacts.test / password) con 10 contactos y
+Crea el usuario del plan de mejoramiento (luistoncel@test.com) con 10 contactos,
+el usuario demo (demo@contacts.test / password) con 10 contactos y
 2 usuarios más con 5 contactos cada uno. Solo para desarrollo local.
 
 ## Variables de entorno
@@ -126,8 +127,8 @@ Todas las rutas van bajo `/api/v1`. Las marcadas con **Bearer** necesitan
 |--------|-----------------------|------------------------------------------------|--------|-------|
 | GET    | /api/v1/health        | Estado del servicio                            | No     | 200   |
 | POST   | /api/v1/auth/register | Crea una cuenta y entrega un token             | No     | 201   |
-| POST   | /api/v1/auth/login    | Inicia sesión y entrega un token               | No     | 200   |
-| POST   | /api/v1/auth/logout   | Cierra sesión y revoca el token                | Bearer | 204   |
+| POST   | /api/v1/login         | Inicia sesión y entrega un token               | No     | 200   |
+| POST   | /api/v1/logout        | Cierra sesión y revoca el token                | Bearer | 200   |
 | GET    | /api/v1/profile       | Perfil del usuario autenticado                 | Bearer | 200   |
 | PUT    | /api/v1/profile       | Reemplaza el perfil                            | Bearer | 200   |
 | PATCH  | /api/v1/profile       | Modifica solo los campos enviados              | Bearer | 200   |
@@ -136,7 +137,7 @@ Todas las rutas van bajo `/api/v1`. Las marcadas con **Bearer** necesitan
 | GET    | /api/v1/contacts/{id} | Perfil completo de un contacto                 | Bearer | 200   |
 | PUT    | /api/v1/contacts/{id} | Reemplaza un contacto                          | Bearer | 200   |
 | PATCH  | /api/v1/contacts/{id} | Modifica solo los campos enviados              | Bearer | 200   |
-| DELETE | /api/v1/contacts/{id} | Elimina con borrado lógico (soft delete)       | Bearer | 204   |
+| DELETE | /api/v1/contacts/{id} | Elimina con borrado lógico (soft delete)       | Bearer | 200   |
 
 ### Ejemplo: crear un contacto
 
@@ -172,13 +173,14 @@ Responde `201`:
     "created_at": "2026-11-09T10:00:00+00:00",
     "updated_at": "2026-11-09T10:00:00+00:00"
   },
-  "message": "Contacto creado correctamente."
+  "message": "Contacto creado exitosamente"
 }
 ```
 
 ## Autenticación
 
-1. POST /api/v1/auth/login (o /auth/register) con email, password y device_name.
+1. POST /api/v1/login (o /auth/register) con email y password (device_name es opcional).
+   Si las credenciales no coinciden responde 401 «Credenciales incorrectas».
 2. Guardar el token de la respuesta.
 3. Enviar en cada petición protegida:
    `Authorization: Bearer {token}` y `Accept: application/json`.
@@ -186,7 +188,7 @@ Responde `201`:
 Sin token (o con un token revocado) la API responde 401 con el enlace al login:
 
 ```json
-{"message": "No has iniciado sesión. Inicia sesión para continuar.", "login_url": "http://127.0.0.1:8000/api/v1/auth/login"}
+{"message": "No has iniciado sesión. Inicia sesión para continuar.", "login_url": "http://127.0.0.1:8000/api/v1/login"}
 ```
 
 El login admite 5 intentos por minuto por correo e IP (al sexto: 429).

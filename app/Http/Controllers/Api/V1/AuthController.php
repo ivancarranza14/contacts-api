@@ -9,9 +9,7 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -43,18 +41,17 @@ class AuthController extends Controller
     {
         $user = User::where('email', $request->validated('email'))->first();
 
-        // Mismo mensaje si el correo no existe o la contraseña no coincide:
+        // 401 con el mismo mensaje si el correo no existe o la contraseña no coincide:
         // así nadie puede averiguar qué correos están registrados.
         if (! $user || ! Hash::check($request->validated('password'), $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => 'Las credenciales no son correctas.',
-            ]);
+            return response()->json(['message' => 'Credenciales incorrectas'], 401);
         }
 
-        $token = $user->createToken($request->validated('device_name'))->plainTextToken;
+        // device_name es opcional: si la app no lo envía, el token se llama "app".
+        $token = $user->createToken($request->validated('device_name') ?? 'app')->plainTextToken;
 
         return response()->json([
-            'message' => 'Sesión iniciada correctamente.',
+            'message' => 'Sesión iniciada exitosamente',
             'token' => $token,
             'token_type' => 'Bearer',
             'user' => new UserResource($user),
@@ -64,10 +61,10 @@ class AuthController extends Controller
     /**
      * Cierra la sesión y revoca el token actual.
      */
-    public function logout(Request $request): Response
+    public function logout(Request $request): JsonResponse
     {
         $request->user()->currentAccessToken()->delete();
 
-        return response()->noContent();
+        return response()->json(['message' => 'Sesión cerrada exitosamente']);
     }
 }

@@ -10,12 +10,12 @@ Route::prefix('v1')->group(function () {
     Route::get('/health', HealthController::class)->name('health');
 
     Route::post('/auth/register', [AuthController::class, 'register'])->name('auth.register');
-    Route::post('/auth/login', [AuthController::class, 'login'])
+    Route::post('/login', [AuthController::class, 'login'])
         ->middleware('throttle:login')
         ->name('auth.login');
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
+        Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
         Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
         Route::match(['put', 'patch'], '/profile', [ProfileController::class, 'update'])->name('profile.update');
